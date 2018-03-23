@@ -1,0 +1,40 @@
+{
+  "name": "Biutifer",
+  "version": "0.0.1",
+  "description": "Ponme bien guaporr",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_title": "Ponme guaporrr",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/biutifer16.png",
+      "32": "images/biutifer32.png",
+      "48": "images/biutifer48.png",
+      "128": "images/biutifer128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "all_frames": true,
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "images/biutifer16.png",
+    "32": "images/biutifer32.png",
+    "48": "images/biutifer48.png",
+    "128": "images/biutifer128.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "management",
+    "activeTab",
+    "declarativeContent",
+    "tabs",
+    "storage",
+    "https://api.alejandrodiego.com/"
+  ],
+  "content_security_policy":
+    "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src https://api.alejandrodiego.com http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' https://api.alejandrodiego.com data:;"
+}
