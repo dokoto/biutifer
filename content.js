@@ -1,5 +1,10 @@
+const API_URL_BASE = 'https://api.alejandrodiego.com';
+const IMG_SERVICE_PATH = '/miscellaneous/rest/google/images';
+const API_TOKEN = '21786cd9fea89c97b479ef1ab04bf426';
+const MARK = 'data-biutifered';
+
 window.inload = function() {
-  console.log('HITLER ONLOAD');
+  console.log('ESPINETE ONLOAD');
 };
 
 chrome.runtime.onMessage.addListener(async function(
@@ -9,13 +14,16 @@ chrome.runtime.onMessage.addListener(async function(
 ) {
   console.log('Maqueando la web');
   debugger;
+
   const mode = request.mode || 'chiquito de la calzada';
   const chiquitos = await fetch(
-    `https://api.alejandrodiego.com/google/rest/pics/?token=21786cd9fea89c97b479ef1ab04bf426&search=${mode}`
+    `${API_URL_BASE}${IMG_SERVICE_PATH}/?token=${API_TOKEN}&search=${mode}`
   ).then(resp => resp.json());
+
   let last_known_scroll_position = 0;
   let imagesLeft = 0;
   let images;
+  let intervalId;
 
   function loadNext() {
     if (imagesLeft) {
@@ -32,8 +40,12 @@ chrome.runtime.onMessage.addListener(async function(
       } >>> ${image.src}`
     );
     image.onload = loadNext;
-    image.src = chiquitos.data[index].image;
-    image.srcset = '';
+    image.setAttribute('srcset', '');
+    image.setAttribute('data-src', '');
+    image.setAttribute('data-srcset', '');
+    image.setAttribute('data-biutifered', true);
+    const url = chiquitos.data[index].image.replace('http://', 'https://');
+    image.src = url;
   }
 
   function ponMeGuapo() {
@@ -43,10 +55,8 @@ chrome.runtime.onMessage.addListener(async function(
     }
   }
 
-  setInterval(function() {
-    images = document.querySelectorAll(
-      'img:not([src^="https://encrypted-tbn0.gstatic.com"])'
-    );
+  intervalId = setInterval(function() {
+    images = document.querySelectorAll('img:not([data-biutifered="true"])');
     imagesLeft = images.length ? images.length - 1 : 0;
     if (imagesLeft) {
       ticking = false;
